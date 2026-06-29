@@ -12,9 +12,11 @@ const ModelViewer = dynamic(() => import('@/components/ModelViewer'), {
   ssr: false,
 });
 
+const REFRESH_TIME = 2000;
+
 export default function Home() {
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [glbUrl, setGlbUrl] = useState<string>('');
+  const [glbURL, setGlbURL] = useState<string>('');
 
   const update = async (code: string) => {
     try {
@@ -29,17 +31,18 @@ export default function Home() {
         throw new Error(errorData.detail || 'Unknown error');
       }
 
-      // Read the GLB binary
       const glbBlob = await response.blob();
+
+      if(glbURL !== ''){
+        URL.revokeObjectURL(glbURL);
+      }
+
+      const newURL = URL.createObjectURL(glbBlob);
       
-      // Create a URL for the 3D Viewer
-      const glbUrl = URL.createObjectURL(glbBlob);
-      
-      setGlbUrl(glbUrl);
+      setGlbURL(newURL);
 
     } catch(error) {
       console.error(error);
-      alert("An error occurred.");
     }
   }
 
@@ -50,19 +53,21 @@ export default function Home() {
 
     timeout.current = setTimeout(()=>{
       update(newValue);
-    }, 3000);
+    }, REFRESH_TIME);
   };
 
   return (
     <main style={{ padding: '20px' }}>
       <h1>CADQuery</h1>
-      <div style={{ border: '1px solid #ccc', marginTop: '10px' }}>
+      <div style={{ border: '1px solid #ccc', marginTop: '10px', float: 'left', width: '50%'}}>
         <CodeEditor value={"import cadquery as cq"} onChange={handleEditorChange} />
       </div>
 
-      {glbUrl && (
-        <ModelViewer src={glbUrl} />
-      )}
+      <div style={{ float: 'right', width: '50%', padding: '10px' }}>
+        {glbURL && (
+          <ModelViewer src={glbURL} />
+        )}
+      </div>
     </main>
   );
 }
