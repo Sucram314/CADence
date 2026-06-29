@@ -8,7 +8,6 @@ interface CodeEditorProps {
 export default function CodeEditor({ value, onChange }: CodeEditorProps) {
   return (
     <Editor
-      height="50vh"
       defaultLanguage="python"
       defaultValue="import cadquery as cq"
       value={value}
