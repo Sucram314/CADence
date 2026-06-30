@@ -105,7 +105,7 @@ export default function Home() {
     <main className="flex flex-col min-h-screen p-4 md:p-6 bg-zinc-50 dark:bg-zinc-900 font-sans">
       <header className="mb-6">
         <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-          CADQuery Agent
+          CadQuery Agent
         </h1>
       </header>
       

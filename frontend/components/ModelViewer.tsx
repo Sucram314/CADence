@@ -30,11 +30,12 @@ export default function ModelViewer({ src }: ModelViewerProps) {
       src={src}
       camera-controls
       auto-rotate
-      style={{ width: '100%', height: '400px' }}
+      style={{ width: '100%', height: '100%' }}
       shadow-intensity="2"
       exposure="0.5"
       tone-mapping="neutral"
       environment-image="neutral"
+      max-field-of-view="90deg"
     />
   );
 }
