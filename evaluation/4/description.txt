@@ -1,0 +1,15 @@
+Task: Add a complex pattern of holes to a base plate
+
+Baseline:
+- Prompt: add holes: circle in top left, horizontal ellipse in top right, vertical ellipse in bottom left, and a rectangle in bottom right
+
+Plan, no sketch:
+- Prompt: add holes: circle in top left, horizontal ellipse in top right, vertical ellipse in bottom left, and a rectangle in bottom right
+
+No plan, sketch:
+- Prompt: add holes
+- Sketch: sketch of pattern
+
+Plan + Sketch: 
+- Prompt: add bosses
+- Sketch: sketch of pattern

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "jgycy788",
+    "name": "L Beam",
+    "description": "Creates an L beam.",
+    "parameters": {
+      "leg_length": 5,
+      "beam_length": 20,
+      "thickness": 1
+    },
+    "code": "def make_base(self):\n    self.model = (\n        cq.Workplane(\"XY\")\n        .moveTo(0, 0)\n        .lineTo(self.leg_length, 0)\n        .lineTo(self.leg_length, self.thickness)\n        .lineTo(self.thickness, self.thickness)\n        .lineTo(self.thickness, self.leg_length)\n        .lineTo(0, self.leg_length)\n        .close()\n        .extrude(self.beam_length)\n    )",
+    "isModified": false,
+    "isExecuted": true
+  },
+  {
+    "id": "fillet_edges",
+    "name": "Fillet Edges",
+    "description": "Fillets the inner corner edge and the two vertical edges on the front leg.",
+    "parameters": {
+      "fillet_radius": 0.2
+    },
+    "code": "def fillet_edges(self):\n    class EdgeSelector(cq.Selector):\n        def __init__(self, thickness, leg_length):\n            self.thickness = thickness\n            self.leg_length = leg_length\n        def filter(self, objectList):\n            result = []\n            for edge in objectList:\n                c = edge.Center()\n                if (abs(c.x - self.thickness) < 1e-3 and abs(c.y - self.thickness) < 1e-3) or (abs(c.x - self.leg_length) < 1e-3):\n                    result.append(edge)\n            return result\n\n    self.model = self.model.edges(\"|Z\").edges(EdgeSelector(self.thickness, self.leg_length)).fillet(self.fillet_radius)",
+    "isExecuted": true,
+    "isModified": false
+  }
+]

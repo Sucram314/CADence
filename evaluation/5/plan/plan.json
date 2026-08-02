@@ -1,0 +1,42 @@
+[
+  {
+    "id": "edy5zc4q",
+    "name": "Base Box",
+    "description": "Creates a foundational parametrized box.",
+    "parameters": {
+      "length": 15,
+      "width": 15,
+      "height": 5
+    },
+    "code": "def make_base(self):\n    shape = cq.Workplane('XY').box(self.length, self.width, self.height)\n    self.box = shape\n    self.model = shape",
+    "isModified": false,
+    "isExecuted": true
+  },
+  {
+    "id": "cut_square_hole",
+    "name": "Cut Square Hole",
+    "description": "Cuts a square hole through the center of the box.",
+    "parameters": {
+      "hole_size": 5
+    },
+    "code": "def cut_square_hole(self):\n    self.model = self.model.faces('>Z').workplane().rect(self.hole_size, self.hole_size).cutThruAll()",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_wheel",
+    "name": "Add Wheel",
+    "description": "Adds a two-groove wheel with pointy sides and a flat middle section with a smaller radius.",
+    "parameters": {
+      "wheel_radius": 6,
+      "wheel_width": 4,
+      "groove_depth": 1.5,
+      "groove_width": 1,
+      "middle_flat_width": 1,
+      "middle_radius": 4.5
+    },
+    "code": "def add_wheel(self):\n    # Create the profile of the wheel to revolve\n    # The profile is a polygon in the XZ plane, which will be revolved around the Z axis\n    # The wheel is centered at the origin, so we'll translate it later\n    \n    r_outer = self.wheel_radius\n    r_inner = self.middle_radius\n    w_total = self.wheel_width\n    w_flat = self.middle_flat_width\n    w_groove = self.groove_width\n    \n    # Calculate points for the profile\n    # Starting from bottom center (0, -w_total/2)\n    pts = [\n        (0, -w_total/2),\n        (r_outer, -w_total/2),\n        (r_outer - self.groove_depth, -w_flat/2 - w_groove/2),\n        (r_inner, -w_flat/2),\n        (r_inner, w_flat/2),\n        (r_outer - self.groove_depth, w_flat/2 + w_groove/2),\n        (r_outer, w_total/2),\n        (0, w_total/2)\n    ]\n    \n    wheel = cq.Workplane('XZ').polyline(pts).close().revolve(360, (0,0,0), (0,1,0))\n    \n    # Position the wheel on the side of the box\n    # The box is centered at origin, so the side face is at X = length/2\n    wheel = wheel.translate((self.length/2 + w_total/2, 0, 0))\n    \n    self.model = self.model.union(wheel)",
+    "isExecuted": true,
+    "isModified": false
+  }
+]

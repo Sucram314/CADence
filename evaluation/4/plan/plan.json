@@ -1,0 +1,40 @@
+[
+  {
+    "id": "10f5vuze",
+    "name": "Base Box",
+    "description": "Creates a foundational parametrized box.",
+    "parameters": {
+      "length": 15,
+      "width": 15,
+      "height": 5
+    },
+    "code": "def make_base(self):\n    shape = cq.Workplane('XY').box(self.length, self.width, self.height)\n    self.box = shape\n    self.model = shape",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_holes",
+    "name": "Add Holes",
+    "description": "Adds four different holes to the corners of the box: a circle, a horizontal ellipse, a vertical ellipse, and a rectangle.",
+    "parameters": {
+      "circle_x": -4,
+      "circle_y": 4,
+      "circle_radius": 1.5,
+      "h_ellipse_x": 4,
+      "h_ellipse_y": 4,
+      "h_ellipse_rx": 2.5,
+      "h_ellipse_ry": 1.5,
+      "v_ellipse_x": -4,
+      "v_ellipse_y": -4,
+      "v_ellipse_rx": 1.5,
+      "v_ellipse_ry": 2.5,
+      "rect_x": 4,
+      "rect_y": -4,
+      "rect_w": 4,
+      "rect_l": 3
+    },
+    "code": "def add_holes(self):\n    top_face = self.box.faces('>Z').workplane()\n    c1 = top_face.pushPoints([(self.circle_x, self.circle_y)]).circle(self.circle_radius).extrude(-self.height, combine=False)\n    c2 = top_face.pushPoints([(self.h_ellipse_x, self.h_ellipse_y)]).ellipse(self.h_ellipse_rx, self.h_ellipse_ry).extrude(-self.height, combine=False)\n    c3 = top_face.pushPoints([(self.v_ellipse_x, self.v_ellipse_y)]).ellipse(self.v_ellipse_rx, self.v_ellipse_ry).extrude(-self.height, combine=False)\n    c4 = top_face.pushPoints([(self.rect_x, self.rect_y)]).rect(self.rect_w, self.rect_l).extrude(-self.height, combine=False)\n    self.model = self.model.cut(c1).cut(c2).cut(c3).cut(c4)",
+    "isExecuted": true,
+    "isModified": false
+  }
+]

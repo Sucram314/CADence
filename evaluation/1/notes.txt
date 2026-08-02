@@ -1,0 +1,2 @@
+The task was performed successfully in all conditions, though the conditions with sketching did not need to specify the number of bosses or their location.
+Additionally, conditions with planning included adjustable parameters for the radius, height, and either an inset value or distance from center value for the bosses.

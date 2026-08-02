@@ -1,0 +1,16 @@
+Task: Hollow out the inside of a house and add two new rectangular windows on a specific wall.
+
+Baseline:
+- Prompt: hollow out the house and add two windows on the right wall
+
+Plan, no sketch:
+- Prompt: hollow out the house and add two windows on the right wall
+
+No plan, sketch:
+- Prompt: hollow out the house and add windows
+- Sketch: two rectangles on the right wall
+
+Plan + Sketch: 
+- Prompt: hollow out the house and add windows
+- Sketch: two rectangles on the right wall
+

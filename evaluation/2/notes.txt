@@ -1,0 +1,7 @@
+Both the baseline and the planning-only condition agents did not correctly interpret "right wall" relative to how a user would look at the front of the house (where the inital doors and windows are).
+By contrast, the conditions with sketching correctly positioned the windows and did not need to specify their location/number through the text prompt at all.
+
+The planning-only condition agent created a wall_thickness parameter for hollowing out the house and a separate step for adding side windows with offset parameters, reusing the window_width and window_height parameters from the previous "Add Windows" step.
+The full condition created new parameters for the side windows. This may simply be an artifact of how similar my window sketches were to the existing windows.
+
+Intrestingly, the conditions without planning hollowed out the roof in addition to the main house body. They also did not care to keep a floor. The conditions with planning did not hollow out the roof, but kept a floor when hollowing out the main house body.

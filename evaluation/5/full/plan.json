@@ -1,0 +1,55 @@
+[
+  {
+    "id": "bxw2zl92",
+    "name": "Base Box",
+    "description": "Creates a foundational parametrized box.",
+    "parameters": {
+      "length": 15,
+      "width": 15,
+      "height": 5
+    },
+    "code": "def make_base(self):\n    shape = cq.Workplane('XY').box(self.length, self.width, self.height)\n    self.box = shape\n    self.model = shape",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "cut_hole",
+    "name": "Cut Hole",
+    "description": "Cuts a rectangular hole through the box.",
+    "parameters": {
+      "hole_width": 12.8,
+      "hole_length": 13.5
+    },
+    "code": "def cut_hole(self):\n    hole = cq.Workplane('XY').rect(self.hole_width, self.hole_length).extrude(10, both=True)\n    self.model = self.model.cut(hole)",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "revolve_sketch",
+    "name": "Revolve Sketch",
+    "description": "Revolves a zigzag profile to create a central shape.",
+    "parameters": {
+      "p1_x": -5,
+      "p1_y": -0.2,
+      "p2_x": -5,
+      "p2_y": -5,
+      "p3_x": -1.8,
+      "p3_y": -0.2,
+      "p4_x": -0.3,
+      "p4_y": -2.5,
+      "p5_x": 1.3,
+      "p5_y": -2.5,
+      "p6_x": 2.6,
+      "p6_y": -0.2,
+      "p7_x": 4.6,
+      "p7_y": -5,
+      "p8_x": 5,
+      "p8_y": -5,
+      "p9_x": 5,
+      "p9_y": -0.2
+    },
+    "code": "def revolve_sketch(self):\n    pts = [\n        (self.p1_x, self.p1_y),\n        (self.p2_x, self.p2_y),\n        (self.p3_x, self.p3_y),\n        (self.p4_x, self.p4_y),\n        (self.p5_x, self.p5_y),\n        (self.p6_x, self.p6_y),\n        (self.p7_x, self.p7_y),\n        (self.p8_x, self.p8_y),\n        (self.p9_x, self.p9_y)\n    ]\n    profile = cq.Workplane('XY').workplane(offset=2.5).polyline(pts).close()\n    revolved = profile.revolve(360, (0,0,0), (1,0,0))\n    self.model = self.model.union(revolved)",
+    "isExecuted": true,
+    "isModified": false
+  }
+]

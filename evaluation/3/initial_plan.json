@@ -1,0 +1,15 @@
+[
+  {
+    "id": "jgycy788",
+    "name": "L Beam",
+    "description": "Creates an L beam.",
+    "parameters": {
+      "leg_length": 5,
+      "beam_length": 20,
+      "thickness": 1
+    },
+    "code": "def make_base(self):\n    self.model = (\n        cq.Workplane(\"XY\")\n        .moveTo(0, 0)\n        .lineTo(self.leg_length, 0)\n        .lineTo(self.leg_length, self.thickness)\n        .lineTo(self.thickness, self.thickness)\n        .lineTo(self.thickness, self.leg_length)\n        .lineTo(0, self.leg_length)\n        .close()\n        .extrude(self.beam_length)\n    )",
+    "isModified": false,
+    "isExecuted": true
+  }
+]

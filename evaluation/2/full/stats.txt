@@ -1,0 +1,3 @@
+Requests: 1
+Tokens: 25346
+Time: 142.2

@@ -1,0 +1,81 @@
+[
+  {
+    "id": "build_walls",
+    "name": "Build Main House Structure",
+    "description": "Create the main rectangular body for the house walls.",
+    "parameters": {
+      "house_length": 100,
+      "house_width": 120,
+      "house_height": 60
+    },
+    "code": "def build_walls(self):\n    walls = cq.Workplane(\"XY\").box(self.house_length, self.house_width, self.house_height)\n    self.model = self.model.union(walls)",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "build_roof",
+    "name": "Build Gable Roof",
+    "description": "Extrude a triangular roof profile across the top of the house with overhangs.",
+    "parameters": {
+      "roof_height": 40,
+      "roof_overhang": 5
+    },
+    "code": "def build_roof(self):\n    roof_length_total = self.house_length + 2 * self.roof_overhang\n    roof_width_total = self.house_width + 2 * self.roof_overhang\n    top_z = self.house_height / 2.0\n    peak_z = top_z + self.roof_height\n    roof = (\n        self.model.faces(\">Y\")\n        .workplane(offset=self.roof_overhang)\n        .polyline([\n            (-roof_length_total / 2.0, top_z),\n            (0.0, peak_z),\n            (roof_length_total / 2.0, top_z)\n        ])\n        .close()\n        .extrude(-roof_width_total)\n    )\n    self.model = self.model.union(roof)",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_door",
+    "name": "Add Front Door",
+    "description": "Cut a recessed entrance door into the front face of the house.",
+    "parameters": {
+      "door_width": 18,
+      "door_height": 35,
+      "door_depth": 4
+    },
+    "code": "def add_door(self):\n    door_z_center = -self.house_height / 2.0 + self.door_height / 2.0\n    door_y_center = self.house_width / 2.0\n    door = (\n        cq.Workplane(\"XY\")\n        .workplane(offset=door_z_center)\n        .center(0.0, door_y_center)\n        .box(self.door_width, self.door_depth * 2.0, self.door_height)\n    )\n    self.model = self.model.cut(door)",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_windows",
+    "name": "Add Windows",
+    "description": "Cut recessed window openings into the front facade.",
+    "parameters": {
+      "window_width": 16,
+      "window_height": 20,
+      "window_depth": 4,
+      "window_offset_x": 25,
+      "window_offset_y": 8
+    },
+    "code": "def add_windows(self):\n    win1 = (\n        cq.Workplane(\"XY\")\n        .workplane(offset=self.window_offset_y)\n        .center(-self.window_offset_x, self.house_width / 2.0)\n        .box(self.window_width, self.window_depth * 2.0, self.window_height)\n    )\n    win2 = (\n        cq.Workplane(\"XY\")\n        .workplane(offset=self.window_offset_y)\n        .center(self.window_offset_x, self.house_width / 2.0)\n        .box(self.window_width, self.window_depth * 2.0, self.window_height)\n    )\n    self.model = self.model.cut(win1).cut(win2)",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "hollow_house",
+    "name": "Hollow Out House",
+    "description": "Hollow out the interior of the house by cutting an inner box.",
+    "parameters": {
+      "wall_thickness": 3
+    },
+    "code": "def hollow_house(self):\n    inner_length = self.house_length - 2 * self.wall_thickness\n    inner_width = self.house_width - 2 * self.wall_thickness\n    inner_height = self.house_height - 2 * self.wall_thickness\n    inner_box = cq.Workplane(\"XY\").box(inner_length, inner_width, inner_height)\n    self.model = self.model.cut(inner_box)",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_side_windows",
+    "name": "Add Side Windows",
+    "description": "Cut windows into the side of the house.",
+    "parameters": {
+      "side_window_width": 20,
+      "side_window_height": 25,
+      "side_window_depth": 5,
+      "side_window_offset_y": 26,
+      "side_window_offset_z": 2
+    },
+    "code": "def add_side_windows(self):\n    win1 = (\n        cq.Workplane(\"YZ\")\n        .workplane(offset=-self.house_length / 2.0)\n        .center(-self.side_window_offset_y, self.side_window_offset_z)\n        .box(self.side_window_width, self.side_window_height, self.side_window_depth * 2.0)\n    )\n    win2 = (\n        cq.Workplane(\"YZ\")\n        .workplane(offset=-self.house_length / 2.0)\n        .center(self.side_window_offset_y, self.side_window_offset_z)\n        .box(self.side_window_width, self.side_window_height, self.side_window_depth * 2.0)\n    )\n    self.model = self.model.cut(win1).cut(win2)",
+    "isExecuted": true,
+    "isModified": false
+  }
+]

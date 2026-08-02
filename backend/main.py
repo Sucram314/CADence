@@ -1,3 +1,5 @@
+MODEL = "gemini-3.1-pro-preview"
+
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,6 +13,7 @@ import traceback
 import json
 import re
 import base64
+import time
 from google import genai
 from google.genai.types import GenerateContentConfig
 from typing import Dict, Union, List, Optional, Any
@@ -44,11 +47,25 @@ class ChatPayload(BaseModel):
     steps: List[StepData]
     image: Optional[str] = None 
     sketch_data: Optional[Any] = None
+    use_plan: Optional[bool] = True
 
 class UpdatePayload(BaseModel):
     steps: List[StepData]
+    use_plan: Optional[bool] = True
 
 client = genai.Client()
+
+def extract_raw_code(text: str) -> str:
+    """Helper to remove markdown backticks if the LLM hallucinates them."""
+    text = text.strip()
+    if text.startswith("```"):
+        lines = text.split("\n")
+        if lines[0].startswith("```"):
+            lines = lines[1:]
+        if len(lines) > 0 and lines[-1].startswith("```"):
+            lines = lines[:-1]
+        text = "\n".join(lines).strip()
+    return text
 
 def build_executable_script(steps: List[StepData]) -> str:
     script = "import cadquery as cq\n\nclass CadModel:\n    def __init__(self):\n        self.model = cq.Workplane('XY')\n"
@@ -68,24 +85,57 @@ def build_executable_script(steps: List[StepData]) -> str:
     script += "result = CadModel()\nif result.model is not None:\n    show_object(result.model)\n"
     return script
 
+
 @app.post("/generate_plan")
 async def generate_plan(payload: ChatPayload):
-    config = GenerateContentConfig(system_instruction=PLANNING_INSTRUCTION, temperature=0.2)
+    sys_inst = PLANNING_INSTRUCTION if payload.use_plan else BASELINE_GENERATION_INSTRUCTION
+    config = GenerateContentConfig(system_instruction=sys_inst, temperature=0.2)
     try:
-        contents = [f"Current Plan:\n{json.dumps([s.model_dump() for s in payload.steps], indent=2)}\n\nUser Request: {payload.prompt}"]
-        response = client.models.generate_content(model="gemini-2.5-flash", contents=contents, config=config)
-        text = response.text.removeprefix("```json").removesuffix("```").strip()
-        return json.loads(text)
+        contents = [f"User Request: {payload.prompt}"]
+        
+        start_time = time.time()
+        response = client.models.generate_content(model=MODEL, contents=contents, config=config)
+        end_time = time.time()
+        
+        if payload.use_plan:
+            text = response.text.removeprefix("```json").removesuffix("```").strip()
+            steps_data = json.loads(text)
+        else:
+            code_text = extract_raw_code(response.text)
+            steps_data = [{
+                "id": "main",
+                "name": "Main Script",
+                "description": "Direct CAD script",
+                "parameters": {},
+                "code": code_text
+            }]
+        
+        tokens = response.usage_metadata.total_token_count if hasattr(response, 'usage_metadata') and response.usage_metadata else 0
+
+        return {
+            "steps": steps_data,
+            "stats": {
+                "generation_time": end_time - start_time,
+                "tokens": tokens
+            }
+        }
     except Exception as e:
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/update_code")
 async def update_code(payload: ChatPayload):
-    config = GenerateContentConfig(system_instruction=UPDATING_INSTRUCTION, temperature=0.1)
+    sys_inst = UPDATING_INSTRUCTION if payload.use_plan else BASELINE_UPDATING_INSTRUCTION
+    config = GenerateContentConfig(system_instruction=sys_inst, temperature=0.1)
 
     try:
-        contents = [f"Current Plan:\n{json.dumps([s.model_dump() for s in payload.steps], indent=2)}\n\nUser Request: {payload.prompt}"]
+        if payload.use_plan:
+            context = f"Current Plan:\n{json.dumps([s.model_dump() for s in payload.steps], indent=2)}"
+        else:
+            context = f"Current Code:\n{payload.steps[0].code if payload.steps else ''}"
+
+        contents = [f"{context}\n\nUser Request: {payload.prompt}"]
         
         if payload.sketch_data:
             contents.append(f"Sketch Data:\n{json.dumps(payload.sketch_data, indent=2)}")
@@ -93,15 +143,36 @@ async def update_code(payload: ChatPayload):
                 data = base64.b64decode(payload.image.removeprefix("data:image/jpeg;base64,"))
                 contents.append(genai.types.Part.from_bytes(data=data, mime_type="image/jpeg"))
 
+        start_time = time.time()
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model=MODEL,
             contents=contents,
             config=config
         )
+        end_time = time.time()
         
-        text = response.text.removeprefix("```json").removesuffix("```").strip()
+        if payload.use_plan:
+            text = response.text.removeprefix("```json").removesuffix("```").strip()
+            steps_data = json.loads(text)
+        else:
+            code_text = extract_raw_code(response.text)
+            steps_data = [{
+                "id": "main",
+                "name": "Main Script",
+                "description": "Updated direct CAD script",
+                "parameters": {},
+                "code": code_text
+            }]
 
-        return json.loads(text)
+        tokens = response.usage_metadata.total_token_count if hasattr(response, 'usage_metadata') and response.usage_metadata else 0
+
+        return {
+            "steps": steps_data,
+            "stats": {
+                "generation_time": end_time - start_time,
+                "tokens": tokens
+            }
+        }
 
     except Exception as e:
         print(traceback.format_exc())
@@ -115,7 +186,11 @@ async def update_model(payload: UpdatePayload):
     exec_env = { "cadquery": cq, "cq": cq, "show_object": show_object }
 
     try:
-        compiled_script = build_executable_script(payload.steps)
+        if payload.use_plan:
+            compiled_script = build_executable_script(payload.steps)
+        else:
+            compiled_script = payload.steps[0].code if len(payload.steps) > 0 else ""
+
         exec(compiled_script, exec_env)
     except Exception as e:
         error_msg = "".join(traceback.format_exception_only(type(e), e))

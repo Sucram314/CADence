@@ -1,0 +1,16 @@
+Task: Fillet specific edges of an L beam.
+
+Baseline:
+- Prompt: fillet the inner corner edge and the two vertical edges on the front leg
+
+Plan, no sketch:
+- Prompt: fillet the inner corner edge and the two vertical edges on the front leg
+
+No plan, sketch:
+- Prompt: fillet these edges
+- Sketch: line on inner corner edge
+
+Plan + Sketch: 
+- Prompt: fillet these edges
+- Sketch: line on inner corner edge
+

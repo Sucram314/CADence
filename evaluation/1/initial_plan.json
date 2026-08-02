@@ -1,0 +1,15 @@
+[
+  {
+    "id": "avnunt10",
+    "name": "Base Box",
+    "description": "Creates a foundational parametrized box.",
+    "parameters": {
+      "length": 15,
+      "width": 15,
+      "height": 5
+    },
+    "code": "def make_base(self):\n    shape = cq.Workplane('XY').box(self.length, self.width, self.height)\n    self.model = shape",
+    "isModified": false,
+    "isExecuted": true
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "id": "iy2ueoj4",
+    "name": "Base Box",
+    "description": "Creates a foundational parametrized box.",
+    "parameters": {
+      "length": 15,
+      "width": 15,
+      "height": 5
+    },
+    "code": "def make_base(self):\n    shape = cq.Workplane('XY').box(self.length, self.width, self.height)\n    self.model = shape",
+    "isModified": false,
+    "isExecuted": true
+  },
+  {
+    "id": "add_bosses_step",
+    "name": "Add Bosses",
+    "description": "Adds four circular bosses to the top face of the base box.",
+    "parameters": {
+      "boss_spacing": 12,
+      "boss_radius": 0.8,
+      "boss_height": 2
+    },
+    "code": "def add_bosses(self):\n    bosses = self.model.faces('>Z').workplane().rect(self.boss_spacing, self.boss_spacing, forConstruction=True).vertices().circle(self.boss_radius).extrude(self.boss_height, combine=False)\n    self.model = self.model.union(bosses)",
+    "isExecuted": true,
+    "isModified": false
+  }
+]

@@ -1,0 +1,15 @@
+Task: Cutting a hole and creating a custom wheel.
+
+Baseline:
+- Prompt: cut a square hole and add a two groove wheel with pointy sides and a flat middle section with a smaller radius
+
+Plan, no sketch:
+- Prompt: cut a square hole and add a two groove wheel with pointy sides and a flat middle section with a smaller radius
+
+No plan, sketch:
+- Prompt: cut hole and revolve sketch
+- Sketch: one side of the wheel
+
+Plan + Sketch: 
+- Prompt: cut hole and revolve sketch
+- Sketch: one side of the wheel

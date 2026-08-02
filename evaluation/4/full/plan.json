@@ -1,0 +1,70 @@
+[
+  {
+    "id": "7xz591qw",
+    "name": "Base Box",
+    "description": "Creates a foundational parametrized box.",
+    "parameters": {
+      "length": 15,
+      "width": 15,
+      "height": 5
+    },
+    "code": "def make_base(self):\n    shape = cq.Workplane('XY').box(self.length, self.width, self.height)\n    self.box = shape\n    self.model = shape",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_circle_hole",
+    "name": "Add Circle Hole",
+    "description": "Adds a circular hole to the top-left of the box.",
+    "parameters": {
+      "circle_cx": -4.6,
+      "circle_cy": 4.5,
+      "circle_radius": 1
+    },
+    "code": "def add_circle_hole(self):\n    self.model = self.model.faces('>Z').workplane().pushPoints([(self.circle_cx, self.circle_cy)]).circle(self.circle_radius).cutThruAll()",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_horizontal_ellipse_hole",
+    "name": "Add Horizontal Ellipse Hole",
+    "description": "Adds a horizontal elliptical hole to the top-right of the box.",
+    "parameters": {
+      "hellipse_cx": 2.1,
+      "hellipse_cy": 4.6,
+      "hellipse_rx": 2.8,
+      "hellipse_ry": 0.8
+    },
+    "code": "def add_horizontal_ellipse_hole(self):\n    self.model = self.model.faces('>Z').workplane().pushPoints([(self.hellipse_cx, self.hellipse_cy)]).ellipse(self.hellipse_rx, self.hellipse_ry).cutThruAll()",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_vertical_ellipse_hole",
+    "name": "Add Vertical Ellipse Hole",
+    "description": "Adds a vertical elliptical hole to the bottom-left of the box.",
+    "parameters": {
+      "vellipse_cx": -4.6,
+      "vellipse_cy": -1.5,
+      "vellipse_rx": 0.95,
+      "vellipse_ry": 2.3
+    },
+    "code": "def add_vertical_ellipse_hole(self):\n    self.model = self.model.faces('>Z').workplane().pushPoints([(self.vellipse_cx, self.vellipse_cy)]).ellipse(self.vellipse_rx, self.vellipse_ry).cutThruAll()",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "add_rectangle_hole",
+    "name": "Add Rectangle Hole",
+    "description": "Adds a rectangular hole to the bottom-right of the box.",
+    "parameters": {
+      "rect_cx": 2.25,
+      "rect_cy": -1.25,
+      "rect_width": 6.3,
+      "rect_length": 4.9
+    },
+    "code": "def add_rectangle_hole(self):\n    self.model = self.model.faces('>Z').workplane().pushPoints([(self.rect_cx, self.rect_cy)]).rect(self.rect_width, self.rect_length).cutThruAll()",
+    "isExecuted": true,
+    "isModified": false
+  }
+]

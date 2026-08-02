@@ -1,0 +1,7 @@
+Full condition essentially got it perfect, matching my sketches for the holes.
+
+Sketch only condition got the shapes down, but flipped the dimensions of the rectangle for some reason.
+
+Baseline condition positioned the holes very incorrectly because it did not account for the fact that previous holes would change the workplane origin of the running model. 
+
+The plan only condition correctly placed the holes but had to guess my desired dimensions. Luckily there were parameters for me to adjust.

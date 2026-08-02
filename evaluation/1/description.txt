@@ -1,0 +1,16 @@
+Task: Add 4 bosses to the corners of a base plate.
+
+Baseline:
+- Prompt: add 4 bosses to the corners of the plate
+
+Plan, no sketch:
+- Prompt: add 4 bosses to the corners of the plate
+
+No plan, sketch:
+- Prompt: add bosses
+- Sketch: four circles at the corners of the plate
+
+Plan + Sketch: 
+- Prompt: add bosses
+- Sketch: four circles at the corners of the plate
+
