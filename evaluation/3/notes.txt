@@ -1,1 +1,3 @@
-All conditions managed to complete the task successfully, though the conditions without skethcing capabilities required further clarification in the text prompt with the description "inner corner edge" and "vertical edges on front leg". For more complex models, such convenient wording may not be as easy to come by.
+Full condition and sketch condition both completed task successfully, though sketch condition breaks when changing parameters in the code (it used point selector directly from sketch data), while full condition anchored the selection to key points based on previous parameters.
+
+Other conditions failed to fillet the correct edge on the h beam, which is understandably harder to describe locations on.

@@ -1,15 +1,47 @@
 [
   {
-    "id": "jgycy788",
-    "name": "L Beam",
-    "description": "Creates an L beam.",
+    "id": "h_beam",
+    "name": "H-Beam",
+    "description": "Creates an H-beam profile by combining three boxes (web and two flanges) and extrudes it.",
     "parameters": {
-      "leg_length": 5,
-      "beam_length": 20,
-      "thickness": 1
+      "h_width": 20,
+      "h_height": 20,
+      "h_web_thickness": 3,
+      "h_flange_thickness": 3,
+      "length": 50,
+      "h_offset_x": -30
     },
-    "code": "def make_base(self):\n    self.model = (\n        cq.Workplane(\"XY\")\n        .moveTo(0, 0)\n        .lineTo(self.leg_length, 0)\n        .lineTo(self.leg_length, self.thickness)\n        .lineTo(self.thickness, self.thickness)\n        .lineTo(self.thickness, self.leg_length)\n        .lineTo(0, self.leg_length)\n        .close()\n        .extrude(self.beam_length)\n    )",
-    "isModified": false,
-    "isExecuted": true
+    "code": "def make_h_beam(self):\n    base_wp = cq.Workplane('XY').center(self.h_offset_x, 0)\n    web = base_wp.box(self.h_web_thickness, self.h_height - 2 * self.h_flange_thickness, self.length)\n    top_flange = base_wp.center(0, (self.h_height - self.h_flange_thickness) / 2).box(self.h_width, self.h_flange_thickness, self.length)\n    bottom_flange = base_wp.center(0, -(self.h_height - self.h_flange_thickness) / 2).box(self.h_width, self.h_flange_thickness, self.length)\n    self.h_beam = web.union(top_flange).union(bottom_flange)\n    self.model = self.h_beam",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "i_beam",
+    "name": "L-Beam",
+    "description": "Creates an L-beam profile and places it in the center, replacing the previous I-beam.",
+    "parameters": {
+      "l_width": 12,
+      "l_height": 24,
+      "l_thickness": 2,
+      "l_offset_x": 0
+    },
+    "code": "def make_l_beam(self):\n    base_wp = cq.Workplane('XY').center(self.l_offset_x, 0)\n    vert_leg = base_wp.center(-self.l_width / 2 + self.l_thickness / 2, 0).box(self.l_thickness, self.l_height, self.length)\n    horiz_leg = base_wp.center(0, -self.l_height / 2 + self.l_thickness / 2).box(self.l_width, self.l_thickness, self.length)\n    self.l_beam = vert_leg.union(horiz_leg)\n    self.model = self.model.union(self.l_beam)",
+    "isExecuted": true,
+    "isModified": false
+  },
+  {
+    "id": "t_bar",
+    "name": "T-Bar",
+    "description": "Creates a T-bar profile with a single top flange and a web, placing it on the right side.",
+    "parameters": {
+      "t_width": 20,
+      "t_height": 20,
+      "t_web_thickness": 2.5,
+      "t_flange_thickness": 2.5,
+      "t_offset_x": 30
+    },
+    "code": "def make_t_bar(self):\n    base_wp = cq.Workplane('XY').center(self.t_offset_x, 0)\n    web = base_wp.center(0, -self.t_flange_thickness / 2).box(self.t_web_thickness, self.t_height - self.t_flange_thickness, self.length)\n    top_flange = base_wp.center(0, (self.t_height - self.t_flange_thickness) / 2).box(self.t_width, self.t_flange_thickness, self.length)\n    self.t_bar = web.union(top_flange)\n    self.model = self.model.union(self.t_bar)",
+    "isExecuted": true,
+    "isModified": false
   }
 ]

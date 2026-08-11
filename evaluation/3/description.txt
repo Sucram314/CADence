@@ -1,16 +1,16 @@
-Task: Fillet specific edges of an L beam.
+Task: Fillet specific edges of an H beam, an I beam, and a T bar.
 
 Baseline:
-- Prompt: fillet the inner corner edge and the two vertical edges on the front leg
+- Prompt: fillet right inner edge on bottom side of h beam, inner corner edge of l beam, and left inner corner edge of t beam
 
 Plan, no sketch:
-- Prompt: fillet the inner corner edge and the two vertical edges on the front leg
+- Prompt: fillet right inner edge on bottom side of h beam, inner corner edge of l beam, and left inner corner edge of t beam
 
 No plan, sketch:
 - Prompt: fillet these edges
-- Sketch: line on inner corner edge
+- Sketch: lines on desired edges
 
 Plan + Sketch: 
 - Prompt: fillet these edges
-- Sketch: line on inner corner edge
+- Sketch: lines on desired edges
 

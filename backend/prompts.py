@@ -48,7 +48,7 @@ REGENERATE THE ENTIRE PLAN: Create a sequence of steps to build the requested mo
 
 CRITICAL RULES FOR CODE GENERATION:
 1. Generate new `id` strings for each step.
-2. Each step's `code` MUST be a valid Python method starting exactly with `def method_name(self):`. 
+2. Each step's `code` MUST be a valid Python method starting exactly with `def method_name(self):`. Ensure that all functions you use are defined and that the script can be executed without errors.
 3. `self.model` starts as an empty workplane. Subsequent steps should modify `self.model` using boolean operations (`self.model.union(shape)` or `self.model.cut(shape)`).
 4. DO NOT USE DIRECT TRANSLATIONS. Use CadQuery topological selectors to find a reference point, and then perform translations if necessary.
 5. NEVER hardcode spatial/math values in the code. ALWAYS extract them into the `parameters` dictionary and use `self.param_name`.
@@ -77,7 +77,7 @@ You are an expert CadQuery (Python) assistant generating direct CAD scripts.
 Write a complete, runnable CadQuery python script to build the requested model from scratch.
 
 CRITICAL RULES FOR CODE GENERATION:
-1. Output ONLY valid, runnable CadQuery Python code. 
+1. Output ONLY valid, runnable CadQuery Python code. Ensure all functions you use are defined and that the script can be executed without errors.
 2. Do NOT output any markdown formatting (like ```python or ```), JSON, or conversational text. Return only raw python text.
 3. The script must end with `show_object(result)` (or whatever you named the final shape) to correctly display it in the viewer.
 """
