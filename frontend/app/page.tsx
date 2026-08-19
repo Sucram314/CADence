@@ -361,7 +361,7 @@ export default function Home() {
     <main className="flex flex-col h-screen p-4 md:p-6 bg-zinc-50 dark:bg-zinc-950 font-sans overflow-hidden">
       <header className="mb-4 shrink-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">CadQuery Agent</h1>
+          <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">CADence</h1>
           <div className="flex gap-4 items-center bg-white dark:bg-zinc-900 px-3 py-1.5 rounded-lg text-xs md:text-sm border border-zinc-200 dark:border-zinc-800 shadow-sm">
             <span className="font-semibold text-zinc-700 dark:text-zinc-300 mr-1">Eval Config:</span>
             <label className="flex items-center gap-1.5 cursor-pointer">

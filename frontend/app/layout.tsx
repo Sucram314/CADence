@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CadQuery Agent",
-  description: "CadQuery Agent",
+  title: "CADence",
+  description: "CADence",
 };
 
 export default function RootLayout({
